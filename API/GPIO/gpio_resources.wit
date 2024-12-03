@@ -1,0 +1,10 @@
+package wasi:gpio@0.0.1;
+
+// Resource for input pins, a.k.a. only readable
+// Resource for output pins, a.k.a. only writeable
+// Resource for in-out pins, a.k.a. can be specified at runtime what they needs to be and switch when desired
+
+resource in-pins {
+    constructor(init: list<u8>); // List of pins which need to be initialized as inputs, will be provided as a capability, e.g. cmd -i 2,3,4
+    
+}

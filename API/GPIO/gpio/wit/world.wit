@@ -1,0 +1,6 @@
+package wasi:gpio;
+
+/// An example world for the component to target.
+world example {
+    import gpio;
+}

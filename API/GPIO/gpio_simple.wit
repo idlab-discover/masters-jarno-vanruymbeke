@@ -1,0 +1,139 @@
+package wasi:gpio;
+
+// Note: add support for in-out pins that can change their behaviour? (like the 6502 can)
+
+interface inputs {
+
+    // Embedded HAL mapping
+    /// Error kind.
+    variant error-kind {
+        /// A different error occurred. The original error may contain more information.
+        other,
+    }
+
+    // Embedded HAL mapping
+    /// Digital output pin state.
+    variant pin-state {
+        /// Low pin state.
+        low,
+
+        /// High pin state.
+        high,
+    }
+
+    /*
+    * OutputPin resource
+    * These resources are objects that implement the embedded-hal OutputPin trait
+    * Actual instances of these resources can be requested using the function 'get-output-pin' provided by the host
+    * Creation of a OutputPin resource with a wrong pin number associated with it will result in an error result for each function call (to prevent malicious uses)
+    */
+
+    // Embedded HAL mapping
+    /// Single digital push-pull output pin.
+    resource output-pin {
+        /// Drives the pin low.
+        ///
+        /// *NOTE* the actual electrical state of the pin may not actually be low, e.g. due to external
+        /// electrical sources.
+        set-low: func() -> result<_, error-kind>;
+
+        /// Drives the pin high.
+        ///
+        /// *NOTE* the actual electrical state of the pin may not actually be high, e.g. due to external
+        /// electrical sources.
+        set-high: func() -> result<_, error-kind>;
+
+        /// Drives the pin high or low depending on the provided value.
+        ///
+        /// *NOTE* the actual electrical state of the pin may not actually be high or low, e.g. due to external
+        /// electrical sources.
+        set-state: func(state: pin-state) -> result<_, error-kind>;
+    }
+
+    /*
+    * OutputPin resource
+    * These resources are objects that implement the embedded-hal StatefulOutputPin trait
+    * Actual instances of these resources can be requested using the function 'get-stateful-output-pin' provided by the host
+    * Creation of a StatefulOutputPin resource with a wrong pin number associated with it will result in an error result for each function call (to prevent malicious uses)
+    */
+
+    // Embedded HAL mapping
+    /// Push-pull output pin that can read its output state.
+    resource stateful-output-pin {
+        /// Have the same function available as output-pin
+        //use output-pin.{set-low, set-high, set-state};
+
+        /// Is the pin in drive high mode?
+        ///
+        /// *NOTE* this does *not* read the electrical state of the pin.
+        is-set-high: func() -> result<bool, error-kind>;
+
+        /// Is the pin in drive low mode?
+        ///
+        /// *NOTE* this does *not* read the electrical state of the pin.
+        is-set-low: func() -> result<bool, error-kind>;
+
+        /// Toggle pin output.
+        toggle: func() -> result<_, error-kind>;
+    }
+
+    /*
+    * InputPin resource
+    * These resources are objects that implement the embedded-hal InputPin trait
+    * Actual instances of these resources can be requested using the function 'get-input-pin' provided by the host
+    * Creation of a InputPin resource with a wrong pin number associated with it will result in an error result for each function call (to prevent malicious uses)
+    */
+
+    // Embedded HAL mapping
+    resource input-pin {
+        is-high: func() -> result<bool, error-kind>;
+        is-low: func() -> result<bool, error-kind>;
+        // CUSTOM
+        // get_state() -> result<pin-state, ERROR>; // To be in the same line as the set_state function in OutputPin
+    }
+
+    // Custom
+    variant capability-error {
+        disabled, // The requested pin is disabled so cannot be used at all
+
+        wrong-mode(pin-mode), // Te requested pin is allowed to be used but is used with the wrong mode, useful for debugging because of the pin-mode field
+
+        internal, // In case the pin is allowed but does not work for some other reason
+    }
+
+    // Custom
+    enum pin-mode {
+        input,
+        output
+    }
+
+    // Custom
+    // Function provided by the runtime that gives the guest a reference to an OutputPin resource for security reasons
+    // Return values
+    // Ok -> resource that has control over the requested GPIO pin that is setup as output
+    // Err -> one of the capability-error variants
+    get-output-pin: func(pin: u32) -> result<output-pin, capability-error>;
+
+    // Custom
+    // Analogous to get-output-pin
+    get-stateful-output-pin: func(pin: u32) -> result<stateful-output-pin, capability-error>;
+
+    // Custom
+    // Analogous to get-output-pin
+    get-input-pin: func(pin: u32) -> result<input-pin, capability-error>;
+
+    variant general-pin {
+        general-output-pin(output-pin), // Variant type that holds an output-pin resource
+
+        general-stateful-output-pin(stateful-output-pin), // Variant type that holds a stateful-output-pin resource
+
+        general-input-pin(input-pin), // Variant type that holds an input-pin resource
+    }
+
+    // Custom
+    // General function to get a GPIO pin resource
+    // Return values
+    // Ok -> general-pin variant type, each of which hold the corresponding pin resource
+    // Err -> one of the capability error variants except the wrong-mode variant because it returns the right pin
+    get-general-pin: func(pin: u32) -> result<general-pin, capability-error>;
+}
