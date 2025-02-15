@@ -1,0 +1,9 @@
+package example:file-reader;
+
+interface reader {
+	read: func(filename: string) -> string;
+}
+
+world file-reader {
+	export reader;
+}
