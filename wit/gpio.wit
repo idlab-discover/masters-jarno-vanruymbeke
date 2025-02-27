@@ -1,0 +1,108 @@
+package example:gpio;
+
+interface general {
+    type pin-number = u8; // Type alias for GPIO pin number
+
+    enum pin-mode {
+        digital-input,
+        digital-output,
+        analog-input,
+        analog-output
+    }
+
+    variant gpio-error {
+        hardware-fault, // Broken pin/chip
+        pin-not-allowed, // Policy does not allow this pin to be used at all
+        pin-mode-not-allowed, // Pin is usable but not in the specified mode
+        pin-number-not-available, // E.g. GPIO pin 1000
+        pin-mode-not-available, // E.g. PWM mode for a pin without that functionallity
+        other(string)
+    }
+}
+
+interface digital {
+    use general.{pin-number};
+    use general.{gpio-error};
+
+    // Enum types for GPIO pin states
+    enum pin-state {
+        high,
+        low
+    }
+
+    // Digital Output Pin resource, describes the functionallity of a general digital output pin
+    // Sets the pin state to 'high' or 'low'
+    resource digital-out-pin {
+        pin-number: func() -> pin-number;
+
+        set-state: func(state: pin-state) -> result<_, gpio-erro>;
+
+        set-high: func() -> result<_, gpio-error>;
+        set-low: func() -> result<_, gpio-error>;
+        toggle: func() -> result<_, gpio-error>;
+    }
+
+    // Digital Input Pin resource, describes the functionallity of a general digital input pin
+    // Reads the pin and outputs 'high' or 'low'
+    resource digital-in-pin {
+        pin-number: func() -> pin-number;
+
+        read: func() -> result<pin-state, gpio-error>;
+
+        is-high: func() -> result<bool, gpio-error>;
+        is-low: func() -> result<bool, gpio-error>;
+
+        wait-until-state: func(state: pin-state) -> result<_, gpio-error>;
+        wait-until-high: func() -> result<_, gpio-error>;
+        wait-until-low: func() -> result<_, gpio-error>;
+
+        wait-until-falling-edge: func() -> result<_, gpio-error>;
+        wait-until-rising-edge: func() -> result<_, gpio-error>;
+    }
+
+    // Functions to acquire certain GPIO pins configured in the desired mode
+    get-digital-in: func(pin-nr: pin-number) -> result<digital-in-pin, gpio-error>;
+    get-digital-out: func(pin-nr: pin-number) -> result<digital-out-pin, gpio-error>;
+
+    
+}
+
+interface analog {
+    use general.{pin-number};
+    use general.{gpio-error}
+
+    // Analog Output Pin resource, describes the functionallity of a general analog output pin
+    // Pins output PWM signals
+    // TODO: add frequency change method
+    resource analog-out-pin {
+        pin-number: func() -> pin-number;
+
+        set-value-raw: func(value: u16) -> result<_, gpio-error>;
+        set-value: func(value: f32) -> result<_, gpio-error>; // 1.0 means max, 0.0 means 0V
+    }
+
+    // Analog Input Pin resource, describes the functionallity of a general analog input pin
+    // Reads by means of an ADC
+    // TODO: add resolution change method
+    resource analog-in-pin {
+        get-pin-nr: func() -> pin-number;
+
+        read-raw: func() -> u16;
+        read: func() -> f32;
+
+        wait-until-above-raw: func(value: u16);
+        wait-until-above: func(value: f32); // Errors if value > 0.0 and value > 1.0
+
+        wait-until-below-raw: func(value: u16);
+        wait-until-below: func(value: f32); // Errors if value > 0.0 and value > 1.0
+    }
+
+    // Functions to acquire certain GPIO pins configured in the desired mode
+    get-analog-in: func(pin-nr: pin-number) -> result<analog-in-pin, string>;
+    get-analog-out: func(pin-nr: pin-number) -> result<analog-out-pin, string>; // PWM pin
+}
+
+world gpio {
+    import digital;
+    import analog;
+}
