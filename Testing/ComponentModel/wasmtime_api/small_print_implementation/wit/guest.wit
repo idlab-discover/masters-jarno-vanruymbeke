@@ -1,0 +1,10 @@
+package guest:implementation;
+
+interface guest-impl {
+	run: func();
+}
+
+world guest {
+	export guest-impl;
+	import host:implementation/host-impl;
+}

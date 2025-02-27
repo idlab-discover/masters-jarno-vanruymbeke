@@ -1,0 +1,22 @@
+[package]
+name = "host"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.96"
+wasmtime = "30.0.0"
+wasmtime-wasi = "30.0.0"
+wit-bindgen-rt = { version = "0.39.0", features = ["bitflags"] }
+
+[profile.release]
+codegen-units = 1
+opt-level = "s"
+debug = false
+strip = true
+lto = true
+
+[package.metadata.component]
+package = "component:host"
+
+[package.metadata.component.dependencies]

@@ -1,0 +1,2 @@
+# Steps
+- cargo add wasmtime

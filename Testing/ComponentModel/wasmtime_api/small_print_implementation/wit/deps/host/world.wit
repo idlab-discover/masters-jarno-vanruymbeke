@@ -1,0 +1,9 @@
+package host:implementation;
+
+interface host-impl {
+    write: func(msg: string);
+}
+
+world host {
+    export host-impl;
+}
