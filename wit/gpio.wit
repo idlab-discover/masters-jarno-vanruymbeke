@@ -77,7 +77,7 @@ interface analog {
     // Analog Input Pin resource, describes the functionallity of a general analog input pin
     // Reads by means of an ADC
     resource analog-in-pin {
-        get-pin-nr: func() -> pin-number;                                  // Returns the pin number tied to this resource
+        pin-nr: func() -> pin-number;                                  // Returns the pin number tied to this resource
 
         read: func() -> u16;                                               // Reads the ADC value of the analog input pin, according to the resolution of the ADC
 
