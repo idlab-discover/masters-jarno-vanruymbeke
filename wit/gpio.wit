@@ -77,12 +77,12 @@ interface analog {
     // Analog Input Pin resource, describes the functionallity of a general analog input pin
     // Reads by means of an ADC
     resource analog-in-pin {
-        pin-nr: func() -> pin-number;                                  // Returns the pin number tied to this resource
+        pin-number: func() -> pin-number;                                  // Returns the pin number tied to this resource
 
-        read: func() -> u16;                                               // Reads the ADC value of the analog input pin, according to the resolution of the ADC
+        read: func() -> result<u16, gpio-error>;                           // Reads the ADC value of the analog input pin, according to the resolution of the ADC
 
-        wait-until-above: func(value: u16);                                // Waits until the ADC measures a value above the treshold
-        wait-until-below: func(value: u16);                                // Waits until the ADC measures a value below the treshold
+        wait-until-above: func(value: u16) - result<_, gpio-error>;        // Waits until the ADC measures a value above the treshold
+        wait-until-below: func(value: u16) -> result<_, gpio-error>;       // Waits until the ADC measures a value below the treshold
     }
 
     // Functions to acquire certain GPIO pins configured in the desired mode
