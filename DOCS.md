@@ -33,3 +33,11 @@ world = "example_world" # Naam van de world die je wilt gebruiken, want meerdere
 # Dependency files (imports uit andere WIT files)
 [package.metadata.component.target.dependencies]
 "dependency:package" = { path = "pad naar dependency world folder" }
+
+# Wit Deps
+Gebruikt om dependencies in wit/deps te steken
+
+## Installatie
+```shell
+cargo install wit-deps-cli
+```

@@ -1,4 +1,4 @@
-package example:gpio;
+package old:old;
 
 interface general {
     type pin-number = u8; // Type alias for GPIO pin number
@@ -81,7 +81,7 @@ interface analog {
 
         read: func() -> result<u16, gpio-error>;                           // Reads the ADC value of the analog input pin, according to the resolution of the ADC
 
-        wait-until-above: func(value: u16) - result<_, gpio-error>;        // Waits until the ADC measures a value above the treshold
+        wait-until-above: func(value: u16) -> result<_, gpio-error>;        // Waits until the ADC measures a value above the treshold
         wait-until-below: func(value: u16) -> result<_, gpio-error>;       // Waits until the ADC measures a value below the treshold
     }
 
@@ -91,7 +91,7 @@ interface analog {
     get-analog-out: func(pin-nr: pin-number) -> result<analog-out-pin, gpio-error>;
 }
 
-world gpio {
+world old {
     import digital;
     import analog;
 }

@@ -1,0 +1,8 @@
+[package]
+name = "i"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+wasmtime = "30.0.2"
+
