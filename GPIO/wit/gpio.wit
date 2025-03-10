@@ -1,4 +1,4 @@
-package example:gpio;
+package wasi:gpio@0.2.0;
 
 interface general {
     variant gpio-error {
