@@ -41,3 +41,16 @@ Gebruikt om dependencies in wit/deps te steken
 ```shell
 cargo install wit-deps-cli
 ```
+
+# Wit Bindgen
+Bindings genereren voor .wit files
+
+## Installatie
+```shell
+cargo install wit-bindgen-cli
+```
+
+## Gebruikt
+```shell
+wit-bindgen rust --out-dir /tmp/bindings GPIO/wit --with wasi:io/poll@0.2.4=generate
+```
