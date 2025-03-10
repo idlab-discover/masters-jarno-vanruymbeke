@@ -9,6 +9,7 @@ interface general {
         undefined-pin-label, // A pin with that label does not exist on the system (e.g. GPIOINVALID)
         pin-mode-not-available, // The pin mode does not exist for that pin (e.g. PWM mode for a purely digital pin)
         would-block, // The function would block if used in an interrupt context
+        operation-not-supported, // Mostly here to have a better error for the pollable functions because this cannot be implemented everywhere
         other(string) // Unspecified error, error message might give hints but not guaranteed
     }
 
@@ -62,6 +63,9 @@ interface digital {
         // Returns the configuration of the gpio this resource is tied to
         get-config: func() -> digital-config;
 
+        // A function to be sure that a GPIO is ready to be used because initialisation time can vary for drivers
+        watch-for-ready: func() -> pollable;
+
         // Sets the pin to a specific state
         set-state: func(state: pin-state) -> result<_, gpio-error>;
 
@@ -78,6 +82,9 @@ interface digital {
     resource digital-in-pin {
         // Returns the configuration of the gpio this resource is tied to
         get-config: func() -> digital-config;
+
+        // A function to be sure that a GPIO is ready to be used because initialisation time can vary for drivers
+        watch-for-ready: func() -> pollable;
 
         // Returns the pin state
         read: func() -> result<pin-state, gpio-error>;
@@ -105,6 +112,9 @@ interface digital {
     resource digital-in-out-pin {
         // Returns the configuration of the gpio this resource is tied to
         get-config: func() -> digital-config;
+
+        // A function to be sure that a GPIO is ready to be used because initialisation time can vary for drivers
+        watch-for-ready: func() -> pollable;
 
         // Sets the pin to a specific state
         set-state: func(state: pin-state) -> result<_, gpio-error>;
@@ -164,6 +174,9 @@ interface analog {
         // Returns the configuration of the gpio this resource is tied to
         get-config: func() -> analog-config;
 
+        // A function to be sure that a GPIO is ready to be used because initialisation time can vary for drivers
+        watch-for-ready: func() -> pollable;
+
         // Sets the PWM value of the pin according to the input value, the value depends on if the pin is active high or active low
         // The value has sufficient margin to also support 32 bit DAC's, when used with a lower resolution DAC, all value above that resolution will represent a fully active state
         // If the pin is active high, higher values (until the max value of the DAC) will result in a higher duty cycle
@@ -179,6 +192,9 @@ interface analog {
     resource analog-in-pin {
         // Returns the configuration of the gpio this resource is tied to
         get-config: func() -> analog-config;
+
+        // A function to be sure that a GPIO is ready to be used because initialisation time can vary for drivers
+        watch-for-ready: func() -> pollable;
 
         // Read the raw value the ADC returns, the value depends on if the pin is active high or active low
         // The value has sufficient margin to also support 32 bit ADC's, when used with a lower resolution ADC, the maximum value returned will be the maximum value the ADC can return
@@ -216,6 +232,9 @@ interface analog {
     resource analog-in-out-pin {
         // Returns the configuration of the gpio this resource is tied to
         get-config: func() -> analog-config;
+
+        // A function to be sure that a GPIO is ready to be used because initialisation time can vary for drivers
+        watch-for-ready: func() -> pollable;
 
         // Sets the PWM value of the pin according to the input value, the value depends on if the pin is active high or active low
         // The value has sufficient margin to also support 32 bit DAC's, when used with a lower resolution DAC, all value above that resolution will represent a fully active state
