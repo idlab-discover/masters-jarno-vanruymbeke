@@ -289,7 +289,7 @@ interface analog {
     //get-analog-in-out: func(pin-label: string, %flags: list<analog-flags>) -> result<analog-in-out-pin, gpio-error>;
 }
 
-//world gpio {
-//    import digital;
-//    import analog;
-//}
+world gpio {
+    import digital;
+    import analog;
+}
