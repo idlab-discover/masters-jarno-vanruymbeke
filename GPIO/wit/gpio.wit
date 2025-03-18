@@ -151,9 +151,9 @@ interface digital {
     // These functions can also be used for pins that are allowed to change mode, if pin 1 was an input but can also be an output,
     // calling get-digital-out will return a digital-out-pin tied to that specific pin and the earlier acquired resource will
     // return error types when it's methods are being invoked
-    get-digital-in: func(pin-label: string, %flags: list<digital-flags>) -> result<digital-in-pin, gpio-error>;
-    get-digital-out: func(pin-label: string, %flags: list<digital-flags>) -> result<digital-out-pin, gpio-error>;
-    get-digital-in-out: func(pin-label: string, %flags: list<digital-flags>) -> result<digital-in-out-pin, gpio-error>;
+    //get-digital-in: func(pin-label: string, %flags: list<digital-flags>) -> result<digital-in-pin, gpio-error>;
+    //get-digital-out: func(pin-label: string, %flags: list<digital-flags>) -> result<digital-out-pin, gpio-error>;
+    //get-digital-in-out: func(pin-label: string, %flags: list<digital-flags>) -> result<digital-in-out-pin, gpio-error>;
 }
 
 interface analog {
@@ -284,12 +284,12 @@ interface analog {
     // These functions can also be used for pins that are allowed to change mode, if pin 1 was an input but can also be an output,
     // calling get-analog-out will return a analog-out-pin tied to that specific pin and the earlier acquired resource will
     // return error types when it's methods are being invoked
-    get-analog-in: func(pin-label: string, %flags: list<analog-flags>) -> result<analog-in-pin, gpio-error>;
-    get-analog-out: func(pin-label: string, %flags: list<analog-flags>) -> result<analog-out-pin, gpio-error>;
-    get-analog-in-out: func(pin-label: string, %flags: list<analog-flags>) -> result<analog-in-out-pin, gpio-error>;
+    //get-analog-in: func(pin-label: string, %flags: list<analog-flags>) -> result<analog-in-pin, gpio-error>;
+    //get-analog-out: func(pin-label: string, %flags: list<analog-flags>) -> result<analog-out-pin, gpio-error>;
+    //get-analog-in-out: func(pin-label: string, %flags: list<analog-flags>) -> result<analog-in-out-pin, gpio-error>;
 }
 
-world gpio {
-    import digital;
-    import analog;
-}
+//world gpio {
+//    import digital;
+//    import analog;
+//}
