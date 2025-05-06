@@ -1,0 +1,8 @@
+package wasi:spi;
+
+world imports {
+    import general;
+    import master;
+    import bus;
+    import slave;
+}
